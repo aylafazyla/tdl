@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>To-Do List AOT</title>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Anton', sans-serif;
+      background: url('https://wallpapercave.com/wp/wp11300467.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      animation: backgroundAnimation 10s infinite alternate;
+    }
+
+    @keyframes backgroundAnimation {
+      0% { background-position: center; }
+      100% { background-position: bottom right; }
+    }
+
+    .chibi-levi {
+      position: absolute;
+      bottom: 10%;
+      left: 5%;
+      width: 120px;
+      height: auto;
+      animation: chibiLeviAnimation 6s ease-in-out infinite;
+      transform-origin: bottom center;
+    }
+
+    @keyframes chibiLeviAnimation {
+      0% { transform: translateX(0) rotate(0); }
+      50% { transform: translateX(10px) rotate(10deg); }
+      100% { transform: translateX(0) rotate(-10deg); }
+    }
+
+    .chibi-levi-second {
+      position: absolute;
+      bottom: 15%;
+      right: 5%;
+      width: 150px;
+      height: auto;
+      animation: chibiLeviSecondAnimation 6s ease-in-out infinite;
+    }
+
+    @keyframes chibiLeviSecondAnimation {
+      0% { transform: translateY(0) rotate(0); }
+      50% { transform: translateY(5px) rotate(5deg); }
+      100% { transform: translateY(0) rotate(-5deg); }
+    }
+
+    .chibi-levi-third {
+      position: absolute;
+      top: 10%;
+      left: 10%;
+      width: 130px;
+      height: auto;
+      animation: chibiLeviThirdAnimation 6s ease-in-out infinite;
+    }
+
+    @keyframes chibiLeviThirdAnimation {
+      0% { transform: translateX(0) rotate(-5deg); }
+      50% { transform: translateX(-10px) rotate(5deg); }
+      100% { transform: translateX(0) rotate(-5deg); }
+    }
+
+    .container {
+      background-color: rgba(0, 0, 0, 0.7);
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px #000;
+      animation: fadeIn 1s ease-out;
+      border: 2px solid #ff3d3d;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 36px;
+      color: #ff3d3d;
+      text-shadow: 2px 2px #000;
+      animation: bounceIn 2s ease-out;
+    }
+
+    @keyframes bounceIn {
+      0% { transform: scale(0.5); opacity: 0; }
+      60% { transform: scale(1.1); opacity: 1; }
+      100% { transform: scale(1); }
+    }
+
+    input, button {
+      font-family: 'Anton', sans-serif;
+      font-size: 16px;
+      padding: 10px;
+      margin-bottom: 10px;
+      width: 100%;
+      border: none;
+      border-radius: 5px;
+      animation: popIn 0.5s ease-out;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    input {
+      background-color: rgba(255, 255, 255, 0.3);
+    }
+
+    button {
+      background-color: #e50914;
+      color: #fff;
+      cursor: pointer;
+      transition: transform 0.3s ease, background-color 0.3s ease;
+    }
+
+    button:hover {
+      transform: scale(1.1);
+      background-color: #ff0000;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      margin-bottom: 10px;
+      padding: 15px;
+      border-left: 6px solid #ff0000;
+      border-radius: 10px;
+      animation: slideIn 0.5s ease-out;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      transition: transform 0.3s ease, background-color 0.3s ease;
+    }
+
+    li:hover {
+      transform: scale(1.03);
+    }
+
+    .done {
+      text-decoration: line-through;
+      background-color: rgba(200, 200, 200, 0.2);
+      color: #aaa;
+      opacity: 0.6;
+    }
+
+    .active {
+      background-color: rgba(0, 255, 0, 0.2);
+    }
+
+    .overdue {
+      background-color: rgba(255, 0, 0, 0.3);
+      color: yellow;
+    }
+
+    .deadline {
+      font-size: 12px;
+      color: #ccc;
+    }
+
+    .icon {
+      margin-right: 10px;
+    }
+
+    .deleteBtn {
+      background: #ff4d4d;
+      border: none;
+      color: white;
+      padding: 5px 10px;
+      font-size: 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .deleteBtn:hover {
+      transform: scale(1.2);
+    }
+
+    .playButton {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      padding: 5px 10px;
+      background: #e50914;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-family: Anton;
+      font-size: 14px;
+      transition: transform 0.3s ease;
+    }
+
+    .playButton:hover {
+      transform: scale(1.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>⚔️ To-Do List</h1>
+    <input type="text" id="todoInput" placeholder="Masukkan misi...">
+    <input type="datetime-local" id="deadlineInput">
+    <button onclick="addTodo()">Tambah Misi</button>
+    <ul id="todoList"></ul>
+  </div>
+
+  <img src="levi.png" class="chibi-levi" alt="Chibi Levi 1">
+  <img src="levi1.png" class="chibi-levi-second" alt="Chibi Levi 2">
+  <img src="levi2.png" class="chibi-levi-third" alt="Chibi Levi 3">
+
+  <audio id="notifAudio">
+    <source src="song2.mp3" type="audio/mp3">
+  </audio>
+
+  <audio id="bgMusic" autoplay loop>
+    <source src="song2.mp3" type="audio/mp3">
+  </audio>
+
+  <script>
+    const todoInput = document.getElementById('todoInput');
+    const deadlineInput = document.getElementById('deadlineInput');
+    const todoList = document.getElementById('todoList');
+    const notifiedTasks = new Set();
+
+    function addTodo() {
+      const text = todoInput.value.trim();
+      const deadline = deadlineInput.value;
+      if (!text || !deadline) return;
+
+      const li = document.createElement('li');
+      const span = document.createElement('span');
+      span.innerHTML = `<span class="icon">🗡️</span> ${text}<br><span class="deadline">Waktu: ${new Date(deadline).toLocaleString()}</span>`;
+      li.appendChild(span);
+
+      li.dataset.text = text;
+      li.dataset.deadline = deadline;
+      li.onclick = (e) => {
+        if (!e.target.classList.contains('deleteBtn')) {
+          li.classList.toggle('done');
+        }
+      };
+
+      const deleteBtn = document.createElement('button');
+      deleteBtn.className = 'deleteBtn';
+      deleteBtn.textContent = '❌';
+      deleteBtn.onclick = (e) => {
+        e.stopPropagation();
+        li.remove();
+      };
+
+      li.appendChild(deleteBtn);
+      todoList.appendChild(li);
+
+      todoInput.value = '';
+      deadlineInput.value = '';
+
+      checkMissions();
+    }
+
+    function notify(text) {
+      const notifAudio = document.getElementById('notifAudio');
+      const bgMusic = document.getElementById('bgMusic');
+      if (Notification.permission === 'granted') {
+        new Notification('⚠️ Misi Dimulai!', {
+          body: `Saatnya: ${text}`,
+          icon: 'https://i.imgur.com/1Sn3nWy.png'
+        });
+        notifAudio.play();  
+        bgMusic.play(); 
+      }
+    }
+
+    function checkMissions() {
+      const now = new Date();
+      document.querySelectorAll('li').forEach(li => {
+        const time = new Date(li.dataset.deadline);
+
+        li.classList.remove('active', 'overdue');
+        
+        if (li.classList.contains('done')) return;
+
+        if (now > time) {
+          li.classList.add('overdue');
+        } else {
+          li.classList.add('active');
+        }
+
+        if (!li.classList.contains('done') && Math.abs(now - time) < 10000) {
+          const text = li.dataset.text;
+          if (!notifiedTasks.has(text)) {
+            notify(text);
+            notifiedTasks.add(text);
+          }
+        }
+      });
+    }
+
+    function initNotif() {
+      if ('Notification' in window) {
+        Notification.requestPermission().then(permission => {
+          if (permission !== 'granted') {
+            alert('Notifikasi tidak diizinkan.');
+          }
+        });
+      }
+    }
+
+    setInterval(checkMissions, 30000);
+    initNotif();
+  </script>
+</body>
+</html>
